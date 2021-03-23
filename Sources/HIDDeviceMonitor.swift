@@ -62,8 +62,8 @@ open class HIDDeviceMonitor {
         let report = UnsafeMutablePointer<UInt8>.allocate(capacity: reportSize)
         let inputCallback : IOHIDReportCallback = { inContext, inResult, inSender, type, reportId, report, reportLength in
             let this:HIDDeviceMonitor = unsafeBitCast(inContext, to: HIDDeviceMonitor.self)
-            let device:HIDDevice = unsafeBitCast(inContext, to: HIDDevice.self)
-            this.read(inResult, inSender: inSender!, type: type, reportId: reportId, report: report, reportLength: reportLength, device: device)
+            let d:HIDDevice = unsafeBitCast(inSender, to: HIDDevice.self)
+            this.read(inResult, inSender: inSender!, type: type, reportId: reportId, report: report, reportLength: reportLength, device: d)
         }
         
         //Hook up inputcallback
