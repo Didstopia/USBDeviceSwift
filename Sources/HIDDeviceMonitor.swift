@@ -52,9 +52,9 @@ open class HIDDeviceMonitor {
         RunLoop.current.run()
     }
     
-    open func read(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex, device: HIDDevice) {
+    open func read(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex) {
         let data = Data(bytes: UnsafePointer<UInt8>(report), count: reportLength)
-        NotificationCenter.default.post(name: .HIDDeviceDataReceived, object: ["data": data, "device": device])
+        NotificationCenter.default.post(name: .HIDDeviceDataReceived, object: ["data": data, "sender": inSender, "reportId": reportId, "report": report, "reportLength": reportLength])
     }
     
     open func rawDeviceAdded(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, inIOHIDDeviceRef: IOHIDDevice!) {
@@ -62,8 +62,7 @@ open class HIDDeviceMonitor {
         let report = UnsafeMutablePointer<UInt8>.allocate(capacity: reportSize)
         let inputCallback : IOHIDReportCallback = { inContext, inResult, inSender, type, reportId, report, reportLength in
             let this:HIDDeviceMonitor = unsafeBitCast(inContext, to: HIDDeviceMonitor.self)
-            let d:HIDDevice = unsafeBitCast(inSender, to: HIDDevice.self)
-            this.read(inResult, inSender: inSender!, type: type, reportId: reportId, report: report, reportLength: reportLength, device: d)
+            this.read(inResult, inSender: inSender!, type: type, reportId: reportId, report: report, reportLength: reportLength)
         }
         
         //Hook up inputcallback
