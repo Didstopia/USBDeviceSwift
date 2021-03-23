@@ -18,10 +18,10 @@ public extension Notification.Name {
 public struct SerialDevice {
     public let path:String
     public var name:String? // USB Product Name
-    public var vendorName:String? //USB Vendor Name
-    public var serialNumber:String? //USB Serial Number
-    public var vendorId:Int? //USB Vendor id
-    public var productId:Int? //USB Product id
+    public var vendorName:String? // USB Vendor Name
+    public var serialNumber:String? // USB Serial Number
+    public var vendorId:Int? // USB Vendor id
+    public var productId:Int? // USB Product id
     
     init(path:String) {
         self.path = path
@@ -29,8 +29,8 @@ public struct SerialDevice {
 }
 
 extension SerialDevice: Hashable {
-    public var hashValue: Int {
-        return "\(path)".hashValue
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(path)
     }
     
     public static func ==(lhs: SerialDevice, rhs: SerialDevice) -> Bool {
