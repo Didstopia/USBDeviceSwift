@@ -55,7 +55,7 @@ open class HIDDeviceMonitor {
     open func read(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex) {
         let data = Data(bytes: UnsafePointer<UInt8>(report), count: reportLength)
         let device = HIDDevice(device: unsafeBitCast(inSender, to: IOHIDDevice.self))
-        NotificationCenter.default.post(name: .HIDDeviceDataReceived, object: ["data": data, "sender": inSender, "reportId": reportId, "report": report, "reportLength": reportLength, "device": device])
+        NotificationCenter.default.post(name: .HIDDeviceDataReceived, object: ["data": data, "device": device])
     }
     
     open func rawDeviceAdded(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, inIOHIDDeviceRef: IOHIDDevice!) {
